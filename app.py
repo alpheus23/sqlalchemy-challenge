@@ -28,6 +28,7 @@ def home():
         f"/api/v1.0/<start>"
     )
 
+
 @app.route('/api/v1.0/precipitation')
 def prcp():
     session = Session(engine)
@@ -45,6 +46,18 @@ def prcp():
         all_prcp.append(prcp_dict)
 
     return jsonify(all_prcp)
+
+
+@app.route('/api/v1.0/stations')
+def station():
+    session = Session(engine)
+
+    station_count = session.query(Station.station).all()
+
+    session.close()
+
+    return jsonify(station_count)
+
 
 
 if __name__ == "__main__":
