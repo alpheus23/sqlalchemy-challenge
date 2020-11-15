@@ -59,6 +59,26 @@ def station():
     return jsonify(station_count)
 
 
+@app.route('/api/v1.0/tobs')
+def tobs():
+    session = Session(engine)
+
+    prev_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
+
+    temps = session.query(Measurement.date, Measurement.tobs).\
+        filter(Measurement.station == 'USC00519281').\
+        filter(Measurement.date >= prev_year).all()
+
+    session.close()
+
+    temp_info = []
+    for date, tobs in temps:
+        temps_dict = {}
+        temps_dict["date"] = date
+        temps_dict["tobs"] = tobs
+        temp_info.append(temps_dict)
+
+    return jsonify(temps)
 
 if __name__ == "__main__":
     app.run(debug=True)
